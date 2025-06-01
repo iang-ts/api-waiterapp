@@ -17,8 +17,17 @@ export const Product = model('Product', new Schema({
     type: Number,
     required: true
   },
-  ingredients: {
+  account: {
+    type: Schema.Types.ObjectId,
     required: true,
+    ref: 'Account'
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Category'
+  },
+  ingredients: {
     type: [{
       name: {
         type: String,
@@ -27,11 +36,23 @@ export const Product = model('Product', new Schema({
       icon: {
         type: String,
       },
-    }],
+    }]
   },
-  category: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Category',
+  ticketInfo: {
+    eventName: String,
+    eventDate: String,
+    additionalInfo: String
+  },
+  hasStock: {
+    type: Boolean,
+    default: false
+  },
+  stockQuantity: {
+    type: Number,
+    default: 0
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   }
 }));

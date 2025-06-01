@@ -3,17 +3,20 @@ import path from 'node:path';
 import { Router } from 'express';
 import multer from 'multer';
 
-import { listCategories } from './app/useCases/categories/listCategories';
+import { deleteProduct } from '../src/app/useCases/products/deleteProduct';
+import { AuthGuard } from './app/auth/AuthGuard';
+import { createAccount } from './app/useCases/Account/createAccount';
+import { loginAccount } from './app/useCases/Account/loginAccount';
 import { createCategory } from './app/useCases/categories/createCategory';
 import { deleteCategory } from './app/useCases/categories/deleteCategory';
-import { listProducts } from './app/useCases/products/listProducts';
-import { createProduct } from './app/useCases/products/createProduct';
-import { deleteProduct } from '../src/app/useCases/products/deleteProduct';
+import { listCategories } from './app/useCases/categories/listCategories';
 import { listProductsByCategory } from './app/useCases/categories/listProductsByCategory';
-import { listOrders } from './app/useCases/orders/listOrders';
-import { createOrder } from './app/useCases/orders/createOrders';
-import { changeOrderStatus } from './app/useCases/orders/changeOrderStatus';
 import { cancelOrder } from './app/useCases/orders/cancelOrder';
+import { changeOrderStatus } from './app/useCases/orders/changeOrderStatus';
+import { createOrder } from './app/useCases/orders/createOrders';
+import { listOrders } from './app/useCases/orders/listOrders';
+import { createProduct } from './app/useCases/products/createProduct';
+import { listProducts } from './app/useCases/products/listProducts';
 
 
 export const router = Router();
@@ -29,24 +32,27 @@ const upload = multer({
   }),
 });
 
-router.get('/categories', listCategories);
+router.post('/accounts/signup', createAccount);
+router.post('/accounts/signin', loginAccount);
 
-router.post('/categories', createCategory);
+router.get('/categories', AuthGuard, listCategories);
 
-router.delete('/categories/:categoryId', deleteCategory);
+router.post('/categories', AuthGuard, createCategory);
 
-router.get('/products', listProducts);
+router.delete('/categories/:categoryId', AuthGuard, deleteCategory);
 
-router.post('/products', upload.single('image'), createProduct);
+router.get('/products', AuthGuard, listProducts);
 
-router.delete('/products/:productId', deleteProduct);
+router.post('/products', AuthGuard, upload.single('image'), createProduct);
 
-router.get('/categories/:categoryId/products', listProductsByCategory);
+router.delete('/products/:productId',AuthGuard, deleteProduct);
+
+router.get('/categories/:categoryId/products' , AuthGuard, listProductsByCategory);
 
 
 router.get('/orders', listOrders);
 
-router.post('/orders', createOrder);
+router.post('/orders', AuthGuard, createOrder);
 
 router.patch('/orders/:orderId', changeOrderStatus);
 
