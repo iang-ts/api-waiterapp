@@ -2,7 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Account } from '../../models/Account';
-import type { JWTPayload } from '../../types/jwtPayload';
+import { JWTPayload } from '../../types/jwtPayload';
 
 export async function createAccount(req: Request, res: Response) {
   try {
