@@ -2,13 +2,13 @@ import { Request } from 'express';
 import { Account } from '../../models/Account';
 import { JWTPayload } from '../../types/jwtPayload';
 
-export async function getUser(req: Request): Promise<JWTPayload> {
+export async function getUser(req: Request): Promise<JWTPayload | null> {
   try {
     const user = (req as any).user as JWTPayload;
 
     const account = await Account.findById(user.id);
     if (!account) {
-      throw new Error('Account not found');
+      return null;
     }
     return {
       email: account.email,
